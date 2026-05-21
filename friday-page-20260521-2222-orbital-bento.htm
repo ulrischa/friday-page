@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A personal landing page concept with an orbital bento layout, expressive typography, accessible structure, and modern CSS.">
+  <title>Orbital Personal Page | Friday Page 2026-05-21</title>
+  <style>
+    @layer reset, base, layout, components, utilities;
+
+    @layer reset {
+      html {
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+      }
+
+      body,
+      h1,
+      h2,
+      h3,
+      p,
+      ul,
+      figure {
+        margin: 0;
+      }
+
+      img,
+      svg {
+        max-inline-size: 100%;
+        block-size: auto;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+    }
+
+    @layer base {
+      :root {
+        color-scheme: light dark;
+        --page-bg: light-dark(#f7f1e7, #11100f);
+        --page-text: light-dark(#191512, #f5efe3);
+        --muted-text: light-dark(#5a4f47, #cbc1b2);
+        --surface: light-dark(#fff9ed, #1a1816);
+        --surface-raised: light-dark(#fffdf5, #24201c);
+        --surface-inverse: light-dark(#191512, #f8efe0);
+        --text-inverse: light-dark(#fff8ea, #17120f);
+        --accent: light-dark(#9dff42, #b7ff68);
+        --accent-strong: light-dark(#093f2b, #d8ff9d);
+        --hot: light-dark(#ff5a3d, #ff7a5f);
+        --violet: light-dark(#7249ff, #a896ff);
+        --line: light-dark(#2d241a, #f1dfc0);
+        --line-soft: light-dark(rgb(45 36 26 / 0.18), rgb(241 223 192 / 0.2));
+        --shadow: 0 1.25rem 3rem light-dark(rgb(45 36 26 / 0.18), rgb(0 0 0 / 0.35));
+        --radius-s: 0.9rem;
+        --radius-m: 1.4rem;
+        --radius-l: 2.25rem;
+        --space-2xs: clamp(0.45rem, 0.4rem + 0.25vi, 0.65rem);
+        --space-xs: clamp(0.7rem, 0.64rem + 0.32vi, 1rem);
+        --space-s: clamp(1rem, 0.9rem + 0.55vi, 1.45rem);
+        --space-m: clamp(1.45rem, 1.25rem + 1vi, 2.3rem);
+        --space-l: clamp(2.1rem, 1.65rem + 2.2vi, 4rem);
+        --space-xl: clamp(3rem, 2.2rem + 4vi, 6.4rem);
+        --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        min-block-size: 100dvb;
+        font-family: var(--font-body);
+        line-height: 1.55;
+        color: var(--page-text);
+        background:
+          radial-gradient(circle at 12% 8%, color-mix(in oklab, var(--accent) 44%, transparent), transparent 28rem),
+          radial-gradient(circle at 84% 18%, color-mix(in oklab, var(--violet) 40%, transparent), transparent 24rem),
+          linear-gradient(135deg, var(--page-bg), color-mix(in oklab, var(--page-bg) 78%, var(--surface-raised)));
+        text-align: start;
+        overflow-x: clip;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        background-image:
+          linear-gradient(var(--line-soft) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+        background-size: 4.5rem 4.5rem;
+        mask-image: radial-gradient(circle at 50% 18%, black, transparent 72%);
+      }
+
+      a:any-link {
+        color: inherit;
+      }
+
+      :where(a:any-link, button):focus-visible {
+        outline: 0.18rem solid var(--accent);
+        outline-offset: 0.24rem;
+      }
+
+      p {
+        max-inline-size: 72ch;
+        color: var(--muted-text);
+      }
+    }
+
+    @layer layout {
+      .page-shell {
+        inline-size: min(100% - clamp(1rem, 4vi, 3rem), 76rem);
+        margin-inline: auto;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-s);
+        padding-block: var(--space-s);
+      }
+
+      .primary-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: end;
+        gap: var(--space-2xs);
+        padding: 0;
+        list-style: none;
+      }
+
+      .hero {
+        container: inline-size / hero;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-m);
+        padding-block: var(--space-xl) var(--space-l);
+      }
+
+      .hero-grid {
+        display: grid;
+        gap: var(--space-s);
+      }
+
+      .section-stack {
+        display: grid;
+        gap: var(--space-l);
+        padding-block: var(--space-l);
+      }
+
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+        gap: var(--space-s);
+      }
+
+      .timeline {
+        display: grid;
+        gap: var(--space-s);
+      }
+
+      .site-footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: var(--space-s);
+        border-block-start: 0.12rem solid var(--line-soft);
+        padding-block: var(--space-m);
+      }
+
+      @container hero (inline-size > 52rem) {
+        .hero-grid {
+          grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+          align-items: stretch;
+        }
+      }
+    }
+
+    @layer components {
+      .skip-link {
+        position: fixed;
+        inset-block-start: var(--space-xs);
+        inset-inline-start: var(--space-xs);
+        z-index: 20;
+        padding: 0.65rem 0.9rem;
+        border: 0.12rem solid var(--line);
+        border-radius: var(--radius-s);
+        background: var(--surface-raised);
+        color: var(--page-text);
+        box-shadow: var(--shadow);
+        transform: translateY(-160%);
+        transition: transform 180ms ease;
+      }
+
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .brand {
+        display: inline-grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: var(--space-xs);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-content: center;
+        inline-size: 2.65rem;
+        block-size: 2.65rem;
+        border: 0.14rem solid var(--line);
+        border-radius: 50%;
+        background: var(--accent);
+        color: #10100d;
+        box-shadow: 0.28rem 0.28rem 0 var(--line);
+      }
+
+      .nav-link,
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: 2.75rem;
+        min-block-size: 2.75rem;
+        padding: 0.65rem 0.9rem;
+        border: 0.12rem solid var(--line);
+        border-radius: 999rem;
+        text-decoration: none;
+      }
+
+      .nav-link {
+        background: color-mix(in oklab, var(--surface) 78%, transparent);
+        backdrop-filter: blur(0.8rem);
+      }
+
+      .button {
+        gap: 0.45rem;
+        background: var(--surface-inverse);
+        color: var(--text-inverse);
+        font-weight: 800;
+        box-shadow: 0.26rem 0.26rem 0 var(--accent);
+      }
+
+      .button.secondary {
+        background: var(--surface-raised);
+        color: var(--page-text);
+        box-shadow: 0.26rem 0.26rem 0 var(--hot);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        inline-size: fit-content;
+        margin-block-end: var(--space-s);
+        padding: 0.35rem 0.65rem;
+        border: 0.12rem solid var(--line);
+        border-radius: 999rem;
+        background: var(--surface);
+        color: var(--accent-strong);
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+
+      .eyebrow::before {
+        content: "";
+        inline-size: 0.65rem;
+        block-size: 0.65rem;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 0.25rem color-mix(in oklab, var(--accent) 28%, transparent);
+      }
+
+      .hero-title {
+        max-inline-size: 12ch;
+        color: var(--page-text);
+        font-family: var(--font-display);
+        font-size: clamp(4rem, 18cqi, 11rem);
+        line-height: 0.8;
+        letter-spacing: -0.095em;
+        text-wrap: balance;
+      }
+
+      .hero-title span {
+        display: block;
+        padding-inline-start: clamp(0rem, 6cqi, 4rem);
+        color: var(--hot);
+      }
+
+      .hero-copy {
+        margin-block-start: var(--space-m);
+        font-size: clamp(1.05rem, 1rem + 0.45vi, 1.35rem);
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+        margin-block-start: var(--space-m);
+      }
+
+      .orbital-card {
+        position: relative;
+        min-block-size: 28rem;
+        overflow: clip;
+        border: 0.14rem solid var(--line);
+        border-radius: var(--radius-l);
+        background:
+          linear-gradient(145deg, color-mix(in oklab, var(--surface-raised) 88%, var(--accent)), var(--surface)),
+          var(--surface);
+        box-shadow: var(--shadow);
+        isolation: isolate;
+      }
+
+      .orbit {
+        position: absolute;
+        inset: 10% 8%;
+        border: 0.16rem solid var(--line);
+        border-radius: 50%;
+        transform: rotate(-16deg);
+      }
+
+      .orbit::before,
+      .orbit::after {
+        content: "";
+        position: absolute;
+        border: 0.14rem solid var(--line);
+        border-radius: inherit;
+      }
+
+      .orbit::before {
+        inset: 14%;
+        background: color-mix(in oklab, var(--violet) 18%, transparent);
+      }
+
+      .orbit::after {
+        inset: 31%;
+        background: var(--accent);
+        box-shadow: inset 0 0 0 0.85rem var(--surface-raised);
+      }
+
+      .floating-note {
+        position: absolute;
+        display: grid;
+        gap: 0.2rem;
+        inline-size: min(72%, 15rem);
+        padding: var(--space-xs);
+        border: 0.12rem solid var(--line);
+        border-radius: var(--radius-m);
+        background: var(--surface-raised);
+        box-shadow: 0.35rem 0.35rem 0 var(--line);
+      }
+
+      .floating-note strong {
+        font-size: 1.1rem;
+        line-height: 1.1;
+      }
+
+      .floating-note:first-of-type {
+        inset-block-start: 8%;
+        inset-inline-start: 7%;
+        rotate: -5deg;
+      }
+
+      .floating-note:last-of-type {
+        inset-block-end: 8%;
+        inset-inline-end: 7%;
+        rotate: 4deg;
+      }
+
+      .section-heading {
+        display: grid;
+        gap: var(--space-xs);
+      }
+
+      .section-heading h2 {
+        max-inline-size: 15ch;
+        font-size: clamp(2.2rem, 1.4rem + 4vi, 5.2rem);
+        line-height: 0.93;
+        letter-spacing: -0.07em;
+        text-wrap: balance;
+      }
+
+      .card {
+        display: grid;
+        align-content: space-between;
+        min-block-size: 15rem;
+        gap: var(--space-s);
+        padding: var(--space-m);
+        border: 0.13rem solid var(--line);
+        border-radius: var(--radius-l);
+        background: var(--surface);
+        box-shadow: 0.22rem 0.22rem 0 var(--line);
+      }
+
+      .card.featured {
+        grid-column: span 2;
+        background:
+          linear-gradient(135deg, color-mix(in oklab, var(--accent) 44%, var(--surface)), var(--surface-raised));
+      }
+
+      .card.hot {
+        background:
+          linear-gradient(135deg, color-mix(in oklab, var(--hot) 36%, var(--surface)), var(--surface-raised));
+      }
+
+      .card h3 {
+        font-size: clamp(1.35rem, 1.1rem + 1.2vi, 2.2rem);
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .card-kicker {
+        color: var(--page-text);
+        font-size: 0.9rem;
+        font-weight: 800;
+      }
+
+      .signal-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2xs);
+        padding: 0;
+        list-style: none;
+      }
+
+      .signal-list li {
+        padding: 0.45rem 0.65rem;
+        border: 0.1rem solid var(--line);
+        border-radius: 999rem;
+        background: var(--surface-raised);
+        color: var(--page-text);
+        font-weight: 700;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--space-s);
+        align-items: start;
+      }
+
+      .timeline-marker {
+        display: grid;
+        place-content: center;
+        inline-size: 3rem;
+        block-size: 3rem;
+        border: 0.12rem solid var(--line);
+        border-radius: 50%;
+        background: var(--accent);
+        color: #10100d;
+        font-weight: 900;
+      }
+
+      .timeline-panel {
+        padding: var(--space-s);
+        border: 0.12rem solid var(--line-soft);
+        border-radius: var(--radius-m);
+        background: color-mix(in oklab, var(--surface) 76%, transparent);
+      }
+
+      .cta-band {
+        display: grid;
+        gap: var(--space-s);
+        padding: var(--space-l);
+        border: 0.14rem solid var(--line);
+        border-radius: var(--radius-l);
+        background: var(--surface-inverse);
+        color: var(--text-inverse);
+        box-shadow: var(--shadow);
+      }
+
+      .cta-band p {
+        color: color-mix(in oklab, var(--text-inverse) 78%, transparent);
+      }
+
+      .cta-band h2 {
+        font-size: clamp(2rem, 1.25rem + 4vi, 5rem);
+        line-height: 0.95;
+        letter-spacing: -0.07em;
+        text-wrap: balance;
+      }
+
+      .footer-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+        padding: 0;
+        list-style: none;
+      }
+    }
+
+    @layer utilities {
+      .visually-hidden:where(:not(:focus-within, :active)) {
+        position: absolute !important;
+        clip-path: inset(50%) !important;
+        overflow: hidden !important;
+        inline-size: 1px !important;
+        block-size: 1px !important;
+        margin: -1px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        white-space: nowrap !important;
+      }
+
+      .decorative {
+        pointer-events: none;
+        user-select: none;
+      }
+
+      @media (width < 44rem) {
+        .site-header {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        .primary-nav ul {
+          justify-content: start;
+        }
+
+        .card.featured {
+          grid-column: auto;
+        }
+      }
+
+      @media (pointer: coarse) {
+        .nav-link,
+        .button {
+          min-block-size: 3rem;
+          min-inline-size: 3rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .orbital-card {
+          animation: card-drift 16s ease-in-out infinite alternate;
+        }
+
+        .orbit::after {
+          animation: pulse-orbit 4s ease-in-out infinite alternate;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      @media (prefers-contrast: more) {
+        :root {
+          --line-soft: currentColor;
+        }
+
+        .nav-link,
+        .card,
+        .timeline-panel {
+          border-color: currentColor;
+        }
+      }
+
+      @media (forced-colors: active) {
+        :root {
+          --page-bg: Canvas;
+          --page-text: CanvasText;
+          --muted-text: CanvasText;
+          --surface: Canvas;
+          --surface-raised: Canvas;
+          --surface-inverse: CanvasText;
+          --text-inverse: Canvas;
+          --accent: Highlight;
+          --hot: LinkText;
+          --violet: LinkText;
+          --line: CanvasText;
+          --line-soft: CanvasText;
+        }
+      }
+
+      @keyframes card-drift {
+        from {
+          transform: translateY(0) rotate(0deg);
+        }
+
+        to {
+          transform: translateY(-0.35rem) rotate(0.45deg);
+        }
+      }
+
+      @keyframes pulse-orbit {
+        from {
+          scale: 1;
+        }
+
+        to {
+          scale: 1.045;
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="site-header page-shell">
+    <a class="brand" href="#top" aria-label="Orbital personal page home">
+      <span class="brand-mark" aria-hidden="true">O</span>
+      <span>Orbital Self</span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a class="nav-link" href="#signals">Signals</a></li>
+        <li><a class="nav-link" href="#method">Method</a></li>
+        <li><a class="nav-link" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="content" tabindex="-1">
+    <section class="hero page-shell" id="top" aria-labelledby="hero-title">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Friday Page · May 21, 2026</p>
+          <h1 class="hero-title" id="hero-title">Build a life that leaves <span>signals.</span></h1>
+          <p class="hero-copy">A personal landing page for a maker who turns research, code, field notes, and small experiments into useful public artifacts.</p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button" href="#signals">Explore the signal map <span aria-hidden="true">↘</span></a>
+            <a class="button secondary" href="#contact">Start a conversation</a>
+          </div>
+        </div>
+
+        <figure class="orbital-card" aria-labelledby="orbit-caption">
+          <div class="orbit decorative" aria-hidden="true"></div>
+          <figcaption class="floating-note" id="orbit-caption">
+            <strong>Personal OS</strong>
+            <span>Projects, essays, demos, and fragments orbit one clear point of view.</span>
+          </figcaption>
+          <div class="floating-note" aria-hidden="true">
+            <strong>Live draft</strong>
+            <span>Static by default. Motion only when the visitor allows it.</span>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-stack page-shell" id="signals" aria-labelledby="signals-title">
+      <div class="section-heading">
+        <p class="eyebrow">Signal map</p>
+        <h2 id="signals-title">A bento system with a human edge.</h2>
+        <p>The layout borrows from bento grids, then loosens the rhythm with oversized type, tilted notes, and layered surfaces so it feels personal rather than templated.</p>
+      </div>
+
+      <div class="bento-grid">
+        <article class="card featured">
+          <div>
+            <p class="card-kicker">01 · Workbench</p>
+            <h3>Selected projects with enough context to understand the thinking.</h3>
+          </div>
+          <ul class="signal-list" role="list" aria-label="Workbench topics">
+            <li>Frontend systems</li>
+            <li>Automation</li>
+            <li>Public notes</li>
+          </ul>
+        </article>
+
+        <article class="card hot">
+          <div>
+            <p class="card-kicker">02 · Writing</p>
+            <h3>Short essays before long manifestos.</h3>
+          </div>
+          <p>Clear thinking, compact examples, and traceable decisions.</p>
+        </article>
+
+        <article class="card">
+          <div>
+            <p class="card-kicker">03 · Labs</p>
+            <h3>Small experiments that can survive the real browser.</h3>
+          </div>
+          <p>Progressive enhancement, semantic HTML, resilient CSS, and no dependency theater.</p>
+        </article>
+
+        <article class="card">
+          <div>
+            <p class="card-kicker">04 · Archive</p>
+            <h3>A structured trail of what changed and why.</h3>
+          </div>
+          <p>Versioned pages make the site feel alive without hiding old directions.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-stack page-shell" id="method" aria-labelledby="method-title">
+      <div class="section-heading">
+        <p class="eyebrow">Method</p>
+        <h2 id="method-title">Modern CSS, but calm where it matters.</h2>
+      </div>
+
+      <div class="timeline" role="list" aria-label="Design method steps">
+        <article class="timeline-item" role="listitem">
+          <div class="timeline-marker" aria-hidden="true">1</div>
+          <div class="timeline-panel">
+            <h3>Layout from content</h3>
+            <p>Grid defines the larger page rhythm. Flex handles compact rows. Container queries tune components where they actually live.</p>
+          </div>
+        </article>
+
+        <article class="timeline-item" role="listitem">
+          <div class="timeline-marker" aria-hidden="true">2</div>
+          <div class="timeline-panel">
+            <h3>Accessibility as structure</h3>
+            <p>Landmarks, skip links, sequential headings, visible focus states, readable line lengths, and reduced-motion support are part of the visual concept.</p>
+          </div>
+        </article>
+
+        <article class="timeline-item" role="listitem">
+          <div class="timeline-marker" aria-hidden="true">3</div>
+          <div class="timeline-panel">
+            <h3>Performance by restraint</h3>
+            <p>No framework, no external fonts, no remote assets. The personality comes from the cascade, composition, and copy.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page-shell" id="contact" aria-labelledby="contact-title">
+      <div class="cta-band">
+        <p class="eyebrow">Open channel</p>
+        <h2 id="contact-title">Have a project, a pattern, or a stubborn interface problem?</h2>
+        <p>Send a compact note with the context, constraints, and the decision you are trying to make. Good websites start with good boundaries.</p>
+        <div class="hero-actions">
+          <a class="button" href="mailto:hello@example.com">Write an email</a>
+          <a class="button secondary" href="#top">Back to top</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>Friday Page 001 · Orbital Bento</p>
+    <ul class="footer-list" role="list" aria-label="Footer links">
+      <li><a href="#signals">Signals</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </footer>
+</body>
+</html>
