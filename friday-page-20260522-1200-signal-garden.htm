@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Signal Garden is an experimental personal landing page for a humane digital product designer and systems thinker.">
+  <meta name="theme-color" content="#191410">
+  <title>Signal Garden · Personal Landing Page</title>
+  <style>
+    @layer reset, tokens, base, layout, components, motion;
+
+    @layer reset {
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body, h1, h2, h3, p, figure, blockquote { margin: 0; }
+      img, svg { display: block; max-inline-size: 100%; }
+      button, input, textarea, select { font: inherit; }
+    }
+
+    @layer tokens {
+      :root {
+        color-scheme: light dark;
+        --ink: light-dark(#1b1510, #fff8ed);
+        --muted: light-dark(#6e5d4c, #d3c1ac);
+        --paper: light-dark(#f6ead8, #15110d);
+        --paper-2: light-dark(#fff8ea, #201913);
+        --paper-3: light-dark(#e7d1b5, #302417);
+        --line: light-dark(#33251b, #ead6b8);
+        --acid: light-dark(#baff3f, #c7ff63);
+        --tomato: light-dark(#f25f3a, #ff7a55);
+        --sky: light-dark(#71d7ff, #7bdcff);
+        --violet: light-dark(#8e63ff, #b08dff);
+        --shadow: light-dark(#1b1510, #000000);
+        --radius-soft: clamp(1.2rem, 3vi, 2.5rem);
+        --radius-hard: 0.45rem;
+        --step--1: clamp(0.88rem, 0.84rem + 0.18vi, 1rem);
+        --step-0: clamp(1rem, 0.94rem + 0.32vi, 1.22rem);
+        --step-1: clamp(1.18rem, 1.02rem + 0.78vi, 1.72rem);
+        --step-2: clamp(1.55rem, 1.2rem + 1.75vi, 2.8rem);
+        --step-3: clamp(2.3rem, 1.48rem + 4.1vi, 5.1rem);
+        --step-4: clamp(3.4rem, 1.8rem + 8vi, 9rem);
+        --space: clamp(1rem, 4vi, 3rem);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+    }
+
+    @layer base {
+      body {
+        min-block-size: 100dvb;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 18% 8%, color-mix(in oklab, var(--acid) 35%, transparent), transparent 20rem),
+          radial-gradient(circle at 88% 22%, color-mix(in oklab, var(--sky) 30%, transparent), transparent 18rem),
+          linear-gradient(135deg, color-mix(in oklab, var(--paper) 96%, var(--tomato)), var(--paper));
+        line-height: 1.55;
+        overflow-x: clip;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.38;
+        mix-blend-mode: multiply;
+        background-image:
+          linear-gradient(90deg, color-mix(in oklab, var(--line) 10%, transparent) 1px, transparent 1px),
+          linear-gradient(color-mix(in oklab, var(--line) 8%, transparent) 1px, transparent 1px);
+        background-size: 2.1rem 2.1rem;
+        mask-image: radial-gradient(circle at 50% 20%, black, transparent 74%);
+      }
+
+      a { color: inherit; }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 0.2rem solid var(--acid);
+        outline-offset: 0.25rem;
+      }
+
+      ::selection {
+        color: #15110d;
+        background: var(--acid);
+      }
+
+      .skip-link {
+        position: fixed;
+        inset-block-start: 1rem;
+        inset-inline-start: 1rem;
+        z-index: 20;
+        translate: 0 -150%;
+        padding: 0.8rem 1rem;
+        border: 0.12rem solid var(--line);
+        border-radius: 999rem;
+        background: var(--paper-2);
+        box-shadow: 0.25rem 0.25rem 0 var(--line);
+      }
+
+      .skip-link:focus { translate: 0; }
+    }
+
+    @layer layout {
+      .page {
+        inline-size: min(100% - var(--space), 82rem);
+        margin-inline: auto;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: clamp(1rem, 3vi, 2rem);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        inline-size: 2.4rem;
+        block-size: 2.4rem;
+        border: 0.13rem solid var(--line);
+        border-radius: 47% 53% 61% 39%;
+        background: var(--acid);
+        color: #17130e;
+        box-shadow: 0.2rem 0.2rem 0 var(--line);
+      }
+
+      .nav-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: end;
+        gap: 0.4rem;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+
+      .nav-list a {
+        display: inline-flex;
+        padding: 0.55rem 0.85rem;
+        border: 0.1rem solid color-mix(in oklab, var(--line) 45%, transparent);
+        border-radius: 999rem;
+        background: color-mix(in oklab, var(--paper-2) 78%, transparent);
+        text-decoration: none;
+      }
+
+      main { padding-block-end: clamp(3rem, 9vi, 7rem); }
+
+      section { scroll-margin-block-start: 2rem; }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+        gap: clamp(1.2rem, 4vi, 3rem);
+        align-items: stretch;
+        padding-block: clamp(2rem, 7vi, 6rem);
+      }
+
+      @media (max-width: 760px) {
+        .hero { grid-template-columns: 1fr; }
+        .site-header { align-items: start; flex-direction: column; }
+        .nav-list { justify-content: start; }
+      }
+
+      .stack { display: grid; gap: clamp(1rem, 2vi, 1.6rem); }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+      }
+
+      @media (max-width: 820px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+    }
+
+    @layer components {
+      .eyebrow {
+        display: inline-flex;
+        inline-size: fit-content;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.45rem 0.7rem;
+        border: 0.12rem dashed var(--line);
+        border-radius: 999rem;
+        background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+        color: var(--muted);
+        font-size: var(--step--1);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .eyebrow::before {
+        content: "";
+        inline-size: 0.62rem;
+        block-size: 0.62rem;
+        border-radius: 50%;
+        background: var(--tomato);
+        box-shadow: 0.7rem 0 0 var(--sky), 1.4rem 0 0 var(--acid);
+      }
+
+      h1 {
+        max-inline-size: 10.6ch;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: var(--step-4);
+        line-height: 0.82;
+        letter-spacing: -0.075em;
+        text-wrap: balance;
+      }
+
+      h2 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: var(--step-3);
+        line-height: 0.92;
+        letter-spacing: -0.055em;
+        text-wrap: balance;
+      }
+
+      h3 {
+        font-size: var(--step-1);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+      }
+
+      .lead {
+        max-inline-size: 58ch;
+        color: var(--muted);
+        font-size: var(--step-1);
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-block-size: 3rem;
+        padding: 0.8rem 1rem;
+        border: 0.13rem solid var(--line);
+        border-radius: 999rem;
+        background: var(--ink);
+        color: var(--paper);
+        font-weight: 900;
+        text-decoration: none;
+        box-shadow: 0.25rem 0.25rem 0 var(--tomato);
+      }
+
+      .button.secondary {
+        background: var(--paper-2);
+        color: var(--ink);
+        box-shadow: 0.25rem 0.25rem 0 var(--line);
+      }
+
+      .signal-card {
+        container-type: inline-size;
+        position: relative;
+        min-block-size: 100%;
+        padding: clamp(1rem, 5cqi, 2rem);
+        border: 0.14rem solid var(--line);
+        border-radius: var(--radius-soft);
+        background:
+          linear-gradient(145deg, color-mix(in oklab, var(--paper-2) 84%, white), var(--paper-3));
+        box-shadow: 0.55rem 0.55rem 0 var(--shadow);
+        overflow: hidden;
+      }
+
+      .signal-card::before {
+        content: "";
+        position: absolute;
+        inset: auto -18% -18% auto;
+        inline-size: 72%;
+        aspect-ratio: 1;
+        border: 0.16rem solid var(--line);
+        border-radius: 37% 63% 42% 58%;
+        background: radial-gradient(circle, var(--acid), var(--sky) 45%, transparent 46%);
+        opacity: 0.76;
+      }
+
+      .signal-map {
+        position: relative;
+        display: grid;
+        gap: 0.8rem;
+      }
+
+      .signal-row {
+        display: grid;
+        grid-template-columns: 3.4rem 1fr auto;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.8rem;
+        border: 0.1rem solid var(--line);
+        border-radius: 1rem;
+        background: color-mix(in oklab, var(--paper-2) 78%, transparent);
+        rotate: var(--tilt, 0deg);
+      }
+
+      .sigil {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1;
+        border: 0.1rem solid var(--line);
+        border-radius: var(--radius-hard);
+        background: var(--fill, var(--acid));
+        color: #17130e;
+        font-weight: 950;
+      }
+
+      .signal-row p { color: var(--muted); font-size: var(--step--1); }
+
+      .number {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 16cqi, 5rem);
+        line-height: 0.8;
+        letter-spacing: -0.08em;
+      }
+
+      .section-head {
+        display: grid;
+        gap: 0.8rem;
+        margin-block: clamp(3rem, 8vi, 6rem) clamp(1rem, 3vi, 2rem);
+      }
+
+      .card {
+        padding: clamp(1rem, 3vi, 1.6rem);
+        border: 0.12rem solid var(--line);
+        border-radius: var(--radius-soft);
+        background: color-mix(in oklab, var(--paper-2) 86%, transparent);
+        box-shadow: 0.32rem 0.32rem 0 var(--line);
+      }
+
+      .card p { color: var(--muted); }
+
+      .work-card:nth-child(1) { grid-column: span 5; background: color-mix(in oklab, var(--acid) 18%, var(--paper-2)); }
+      .work-card:nth-child(2) { grid-column: span 7; background: color-mix(in oklab, var(--sky) 18%, var(--paper-2)); }
+      .work-card:nth-child(3) { grid-column: span 7; background: color-mix(in oklab, var(--tomato) 16%, var(--paper-2)); }
+      .work-card:nth-child(4) { grid-column: span 5; background: color-mix(in oklab, var(--violet) 16%, var(--paper-2)); }
+
+      @media (max-width: 820px) {
+        .work-card:nth-child(n) { grid-column: auto; }
+      }
+
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        padding: 0;
+        margin: 1rem 0 0;
+        list-style: none;
+      }
+
+      .tag-list li {
+        padding: 0.35rem 0.55rem;
+        border: 0.08rem solid var(--line);
+        border-radius: 999rem;
+        background: color-mix(in oklab, var(--paper) 65%, transparent);
+        color: var(--muted);
+        font-size: var(--step--1);
+        font-weight: 800;
+      }
+
+      .manifesto {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 1rem;
+        align-items: start;
+      }
+
+      @media (max-width: 760px) { .manifesto { grid-template-columns: 1fr; } }
+
+      .note {
+        position: relative;
+        padding: clamp(1rem, 3vi, 1.4rem);
+        border: 0.12rem solid var(--line);
+        border-radius: 0.7rem;
+        background: var(--acid);
+        color: #17130e;
+        box-shadow: 0.4rem 0.4rem 0 var(--line);
+        rotate: -1.5deg;
+      }
+
+      .note::before {
+        content: "";
+        position: absolute;
+        inset-block-start: -0.8rem;
+        inset-inline: 30% 30%;
+        block-size: 1.2rem;
+        border: 0.09rem solid color-mix(in oklab, var(--line) 40%, transparent);
+        border-radius: 999rem;
+        background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+      }
+
+      .principles {
+        display: grid;
+        gap: 0.8rem;
+        counter-reset: principle;
+      }
+
+      .principle {
+        counter-increment: principle;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.8rem;
+        align-items: start;
+      }
+
+      .principle::before {
+        content: counter(principle, decimal-leading-zero);
+        padding: 0.2rem 0.45rem;
+        border: 0.1rem solid var(--line);
+        border-radius: 999rem;
+        background: var(--paper-3);
+        font-weight: 900;
+      }
+
+      .contact {
+        display: grid;
+        gap: 1rem;
+        align-items: center;
+        margin-block-start: clamp(3rem, 8vi, 6rem);
+        padding: clamp(1.3rem, 5vi, 3rem);
+        border: 0.14rem solid var(--line);
+        border-radius: clamp(1.2rem, 5vi, 4rem);
+        background:
+          radial-gradient(circle at 92% 10%, color-mix(in oklab, var(--tomato) 30%, transparent), transparent 18rem),
+          var(--ink);
+        color: var(--paper);
+        box-shadow: 0.6rem 0.6rem 0 var(--tomato);
+      }
+
+      .contact p { color: color-mix(in oklab, var(--paper) 72%, transparent); }
+
+      .site-footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: 2rem;
+        color: var(--muted);
+        font-size: var(--step--1);
+      }
+    }
+
+    @layer motion {
+      @media (prefers-reduced-motion: no-preference) {
+        .signal-card::before { animation: breathe 9s ease-in-out infinite alternate; }
+        .signal-row { transition: translate 180ms ease, rotate 180ms ease; }
+        .signal-row:hover { translate: -0.18rem -0.18rem; rotate: 0deg; }
+        .button { transition: translate 180ms ease, box-shadow 180ms ease; }
+        .button:hover { translate: -0.15rem -0.15rem; box-shadow: 0.4rem 0.4rem 0 var(--tomato); }
+      }
+
+      @keyframes breathe {
+        from { transform: translate3d(0, 0, 0) scale(1); }
+        to { transform: translate3d(-4%, -4%, 0) scale(1.08); }
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header page" aria-label="Primary">
+    <a class="brand" href="#top" aria-label="Signal Garden home">
+      <span class="brand-mark" aria-hidden="true">SG</span>
+      <span>Signal Garden</span>
+    </a>
+    <nav aria-label="Page sections">
+      <ul class="nav-list">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="page">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="stack">
+        <p class="eyebrow">Independent digital craft</p>
+        <h1 id="hero-title">I grow useful systems from messy signals.</h1>
+        <p class="lead">A personal landing page for a product-minded designer who turns research, prototypes, and small acts of care into resilient digital experiences.</p>
+        <div class="hero-actions" aria-label="Primary actions">
+          <a class="button" href="#contact">Start a conversation</a>
+          <a class="button secondary" href="#work">Explore field notes</a>
+        </div>
+      </div>
+
+      <aside class="signal-card" aria-label="Live signal board">
+        <div class="signal-map">
+          <article class="signal-row" style="--tilt: -1.4deg; --fill: var(--acid);">
+            <span class="sigil" aria-hidden="true">01</span>
+            <div>
+              <h3>Research pulse</h3>
+              <p>Interviews, analytics, and quiet observations become design direction.</p>
+            </div>
+            <strong class="number">47</strong>
+          </article>
+          <article class="signal-row" style="--tilt: 1deg; --fill: var(--sky);">
+            <span class="sigil" aria-hidden="true">02</span>
+            <div>
+              <h3>Prototype loops</h3>
+              <p>Clickable hypotheses are tested before the team falls in love with them.</p>
+            </div>
+            <strong class="number">12</strong>
+          </article>
+          <article class="signal-row" style="--tilt: -0.6deg; --fill: var(--tomato);">
+            <span class="sigil" aria-hidden="true">03</span>
+            <div>
+              <h3>Delivery rituals</h3>
+              <p>Accessible components, honest docs, and handoff that survives Monday.</p>
+            </div>
+            <strong class="number">08</strong>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section id="work" aria-labelledby="work-title">
+      <div class="section-head">
+        <p class="eyebrow">Recent field notes</p>
+        <h2 id="work-title">Less portfolio wall, more living notebook.</h2>
+      </div>
+      <div class="grid">
+        <article class="card work-card">
+          <h3>Decision rooms</h3>
+          <p>Facilitated cross-functional sessions that convert stakeholder fog into ranked options, trade-offs, and next tests.</p>
+          <ul class="tag-list" aria-label="Topics">
+            <li>Strategy</li><li>Workshops</li><li>Clarity</li>
+          </ul>
+        </article>
+        <article class="card work-card">
+          <h3>Accessible interface systems</h3>
+          <p>Designed component rules with semantic HTML, visible focus states, responsive behavior, and graceful motion preferences baked in from the start.</p>
+          <ul class="tag-list" aria-label="Topics">
+            <li>Design systems</li><li>WCAG</li><li>CSS architecture</li>
+          </ul>
+        </article>
+        <article class="card work-card">
+          <h3>Story-led dashboards</h3>
+          <p>Reframed dense metrics into readable stories with progressive disclosure, clear hierarchy, and small moments of delight.</p>
+          <ul class="tag-list" aria-label="Topics">
+            <li>Data UX</li><li>Content design</li><li>Product</li>
+          </ul>
+        </article>
+        <article class="card work-card">
+          <h3>Launch gardens</h3>
+          <p>Built durable launch pages that can evolve after release, with modular sections and reusable patterns instead of brittle one-offs.</p>
+          <ul class="tag-list" aria-label="Topics">
+            <li>Landing pages</li><li>HTML</li><li>Iteration</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="method" class="manifesto" aria-labelledby="method-title">
+      <div class="section-head">
+        <p class="eyebrow">Working method</p>
+        <h2 id="method-title">Warmth, friction, and proof.</h2>
+      </div>
+      <div class="stack">
+        <blockquote class="note">
+          <p><strong>Design should feel touched by a human</strong>, but it should behave like a reliable tool. The sweet spot is expressive, legible, and kind to the browser.</p>
+        </blockquote>
+        <div class="card principles" aria-label="Design principles">
+          <article class="principle">
+            <div>
+              <h3>Start with the sentence</h3>
+              <p>Before a layout exists, define the one idea the page must make unforgettable.</p>
+            </div>
+          </article>
+          <article class="principle">
+            <div>
+              <h3>Make complexity skimmable</h3>
+              <p>Use rhythm, labels, and structure so people can scan first and dive deeper later.</p>
+            </div>
+          </article>
+          <article class="principle">
+            <div>
+              <h3>Ship with empathy</h3>
+              <p>Respect preferences for color scheme and reduced motion, and keep the markup meaningful.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <p class="eyebrow">Open for focused collaborations</p>
+      <h2 id="contact-title">Bring a knotty idea, a half-built product, or a page that needs a soul.</h2>
+      <p class="lead">I can help shape the narrative, design the system, prototype the interaction, and leave behind code that is clear enough for the next person.</p>
+      <div class="hero-actions">
+        <a class="button" href="mailto:hello@example.com?subject=Signal%20Garden%20Project">Email hello@example.com</a>
+        <a class="button secondary" href="#top">Back to top</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <p>Signal Garden · Personal website concept</p>
+    <p>Built with semantic HTML, layered CSS, fluid type, and humane defaults.</p>
+  </footer>
+</body>
+</html>
