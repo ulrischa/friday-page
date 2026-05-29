@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Temporal Atlas is an experimental personal landing page with cartographic navigation, time axes, knowledge paths, and accessible modern CSS.">
+  <meta name="theme-color" content="#071317">
+  <title>Temporal Atlas · Personal Landing Page</title>
+  <style>
+    @layer reset, tokens, base, layout, components, motion;
+
+    @layer reset {
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body, h1, h2, h3, p, figure, blockquote, dl, dd { margin: 0; }
+      img, svg { display: block; max-inline-size: 100%; }
+      button, input, textarea, select { font: inherit; }
+    }
+
+    @layer tokens {
+      :root {
+        color-scheme: dark light;
+        --ink: light-dark(#172125, #ecf6ef);
+        --muted: light-dark(#51636a, #9bb6ad);
+        --paper: light-dark(#eef3ec, #071317);
+        --paper-2: light-dark(#fffdf2, #102227);
+        --paper-3: light-dark(#d9e4d8, #17343a);
+        --line: light-dark(#213035, #9fc9bc);
+        --line-soft: light-dark(#b9c8c1, #24484f);
+        --signal: light-dark(#0d6b63, #80ffce);
+        --sun: light-dark(#d17124, #ffb65c);
+        --violet: light-dark(#5741a6, #b4a1ff);
+        --water: light-dark(#176b91, #7addff);
+        --shadow: light-dark(#172125, #000000);
+        --radius-soft: clamp(1rem, 2.6vi, 2.25rem);
+        --step--1: clamp(0.84rem, 0.8rem + 0.2vi, 0.98rem);
+        --step-0: clamp(1rem, 0.94rem + 0.34vi, 1.2rem);
+        --step-1: clamp(1.22rem, 1.05rem + 0.82vi, 1.8rem);
+        --step-2: clamp(1.58rem, 1.25rem + 1.65vi, 2.72rem);
+        --step-3: clamp(2.25rem, 1.52rem + 3.65vi, 4.8rem);
+        --step-4: clamp(3.4rem, 2rem + 7vi, 8.4rem);
+        --space: clamp(1rem, 4vi, 3rem);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+    }
+
+    @layer base {
+      body {
+        min-block-size: 100dvb;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 17% 12%, color-mix(in oklab, var(--signal) 24%, transparent), transparent 22rem),
+          radial-gradient(circle at 84% 18%, color-mix(in oklab, var(--violet) 22%, transparent), transparent 21rem),
+          radial-gradient(circle at 68% 82%, color-mix(in oklab, var(--water) 18%, transparent), transparent 26rem),
+          linear-gradient(145deg, color-mix(in oklab, var(--paper) 90%, #000000), var(--paper));
+        line-height: 1.58;
+        overflow-x: clip;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        background-image:
+          linear-gradient(90deg, color-mix(in oklab, var(--line) 10%, transparent) 1px, transparent 1px),
+          linear-gradient(color-mix(in oklab, var(--line) 9%, transparent) 1px, transparent 1px),
+          radial-gradient(circle at center, color-mix(in oklab, var(--line) 16%, transparent) 1px, transparent 1.5px);
+        background-size: 3.5rem 3.5rem, 3.5rem 3.5rem, 1.75rem 1.75rem;
+        mask-image: radial-gradient(circle at 50% 22%, black, transparent 78%);
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: auto -10vi -38vi auto;
+        z-index: -1;
+        inline-size: 78vi;
+        aspect-ratio: 1;
+        border: 1px solid color-mix(in oklab, var(--signal) 28%, transparent);
+        border-radius: 50%;
+        background:
+          repeating-radial-gradient(circle, transparent 0 7%, color-mix(in oklab, var(--signal) 12%, transparent) 7.2% 7.5%, transparent 7.7% 14%),
+          conic-gradient(from 28deg, transparent, color-mix(in oklab, var(--water) 11%, transparent), transparent, color-mix(in oklab, var(--sun) 10%, transparent), transparent);
+        filter: blur(0.2px);
+        opacity: 0.72;
+      }
+
+      a { color: inherit; }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 0.18rem solid var(--signal);
+        outline-offset: 0.25rem;
+      }
+
+      ::selection {
+        color: #071317;
+        background: var(--signal);
+      }
+
+      .skip-link {
+        position: fixed;
+        inset-block-start: 1rem;
+        inset-inline-start: 1rem;
+        z-index: 20;
+        translate: 0 -150%;
+        padding: 0.75rem 1rem;
+        border: 0.1rem solid var(--line);
+        border-radius: 999rem;
+        background: var(--paper-2);
+        box-shadow: 0.22rem 0.22rem 0 var(--shadow);
+      }
+
+      .skip-link:focus { translate: 0; }
+    }
+
+    @layer layout {
+      .page {
+        inline-size: min(100% - var(--space), 86rem);
+        margin-inline: auto;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: clamp(1rem, 3vi, 2rem);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.72rem;
+        font-weight: 900;
+        letter-spacing: -0.045em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        inline-size: 2.45rem;
+        block-size: 2.45rem;
+        border: 0.1rem solid var(--line);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle, var(--signal) 0 0.24rem, transparent 0.27rem),
+          repeating-conic-gradient(from 14deg, color-mix(in oklab, var(--signal) 44%, transparent) 0 9deg, transparent 9deg 18deg),
+          var(--paper-2);
+        box-shadow: 0 0 0 0.28rem color-mix(in oklab, var(--line) 12%, transparent);
+      }
+
+      .nav-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: end;
+        gap: 0.45rem;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+
+      .nav-list a {
+        display: inline-flex;
+        padding: 0.58rem 0.86rem;
+        border: 0.08rem solid color-mix(in oklab, var(--line) 48%, transparent);
+        border-radius: 999rem;
+        background: color-mix(in oklab, var(--paper-2) 72%, transparent);
+        color: var(--muted);
+        text-decoration: none;
+        backdrop-filter: blur(0.6rem);
+      }
+
+      main { padding-block-end: clamp(4rem, 10vi, 8rem); }
+
+      section { scroll-margin-block-start: 2rem; }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.02fr) minmax(20rem, 0.98fr);
+        gap: clamp(1.2rem, 4vi, 3.5rem);
+        align-items: center;
+        padding-block: clamp(2rem, 8vi, 6.5rem);
+      }
+
+      .stack { display: grid; gap: clamp(1rem, 2vi, 1.55rem); }
+
+      .section-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+        gap: clamp(1.2rem, 4vi, 3rem);
+        align-items: start;
+        padding-block: clamp(3rem, 7vi, 6rem);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .wide-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+      }
+
+      @media (max-width: 860px) {
+        .hero,
+        .section-grid,
+        .card-grid { grid-template-columns: 1fr; }
+
+        .site-header { align-items: start; flex-direction: column; }
+        .nav-list { justify-content: start; }
+      }
+    }
+
+    @layer components {
+      .eyebrow {
+        display: inline-flex;
+        inline-size: fit-content;
+        align-items: center;
+        gap: 0.56rem;
+        padding: 0.45rem 0.72rem;
+        border: 0.08rem solid color-mix(in oklab, var(--line) 60%, transparent);
+        border-radius: 999rem;
+        background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+        color: var(--muted);
+        font-size: var(--step--1);
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        inline-size: 0.64rem;
+        block-size: 0.64rem;
+        border-radius: 50%;
+        background: var(--signal);
+        box-shadow: 0.72rem 0 0 var(--sun), 1.44rem 0 0 var(--water);
+      }
+
+      h1 {
+        max-inline-size: 10.2ch;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: var(--step-4);
+        line-height: 0.82;
+        letter-spacing: -0.075em;
+        text-wrap: balance;
+      }
+
+      h2 {
+        max-inline-size: 12ch;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: var(--step-3);
+        line-height: 0.94;
+        letter-spacing: -0.055em;
+        text-wrap: balance;
+      }
+
+      h3 {
+        font-size: var(--step-1);
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+      }
+
+      .lead {
+        max-inline-size: 64ch;
+        color: var(--muted);
+        font-size: var(--step-1);
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+
+      .meta-row li {
+        padding: 0.52rem 0.72rem;
+        border: 0.08rem solid color-mix(in oklab, var(--line) 45%, transparent);
+        border-radius: 999rem;
+        background: color-mix(in oklab, var(--paper-2) 68%, transparent);
+        color: var(--muted);
+        font-size: var(--step--1);
+      }
+
+      .hero-card,
+      .route-card,
+      .timeline-card,
+      .signal-panel {
+        border: 0.08rem solid color-mix(in oklab, var(--line) 54%, transparent);
+        background: color-mix(in oklab, var(--paper-2) 74%, transparent);
+        box-shadow: 0 1.4rem 4rem color-mix(in oklab, var(--shadow) 22%, transparent);
+        backdrop-filter: blur(1rem);
+      }
+
+      .hero-card {
+        position: relative;
+        display: grid;
+        min-block-size: min(80dvb, 39rem);
+        place-items: center;
+        padding: clamp(1rem, 3vi, 2rem);
+        border-radius: clamp(1.4rem, 4vi, 3rem);
+        overflow: clip;
+        isolation: isolate;
+      }
+
+      .atlas {
+        position: relative;
+        inline-size: min(100%, 32rem);
+        aspect-ratio: 1;
+        border: 0.08rem solid color-mix(in oklab, var(--line) 40%, transparent);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 50% 50%, var(--signal) 0 0.32rem, transparent 0.36rem),
+          repeating-radial-gradient(circle, transparent 0 10.5%, color-mix(in oklab, var(--line) 36%, transparent) 10.7% 10.95%, transparent 11.15% 17.5%),
+          conic-gradient(from 18deg, transparent 0 16deg, color-mix(in oklab, var(--signal) 22%, transparent) 16deg 22deg, transparent 22deg 96deg, color-mix(in oklab, var(--sun) 20%, transparent) 96deg 104deg, transparent 104deg 212deg, color-mix(in oklab, var(--water) 18%, transparent) 212deg 226deg, transparent 226deg),
+          radial-gradient(circle at 33% 28%, color-mix(in oklab, var(--violet) 24%, transparent), transparent 19%),
+          radial-gradient(circle at 65% 70%, color-mix(in oklab, var(--water) 22%, transparent), transparent 17%);
+      }
+
+      .atlas::before,
+      .atlas::after {
+        content: "";
+        position: absolute;
+        inset: 11%;
+        border: 0.08rem dashed color-mix(in oklab, var(--signal) 48%, transparent);
+        border-radius: 50%;
+      }
+
+      .atlas::after {
+        inset: 23%;
+        border-style: solid;
+        rotate: 35deg;
+        clip-path: polygon(0 0, 100% 12%, 85% 100%, 14% 92%);
+      }
+
+      .axis {
+        position: absolute;
+        inset: 50% auto auto 50%;
+        inline-size: 104%;
+        block-size: 0.08rem;
+        transform-origin: 0 50%;
+        background: color-mix(in oklab, var(--line) 36%, transparent);
+      }
+
+      .axis:nth-child(1) { rotate: 0deg; }
+      .axis:nth-child(2) { rotate: 45deg; }
+      .axis:nth-child(3) { rotate: 90deg; }
+      .axis:nth-child(4) { rotate: 135deg; }
+
+      .pin {
+        position: absolute;
+        display: grid;
+        place-items: center;
+        inline-size: 2.4rem;
+        block-size: 2.4rem;
+        border: 0.08rem solid var(--line);
+        border-radius: 50%;
+        background: var(--paper-2);
+        color: var(--signal);
+        font-weight: 900;
+        box-shadow: 0 0 0 0.4rem color-mix(in oklab, var(--paper-2) 70%, transparent);
+      }
+
+      .pin-a { inset-block-start: 14%; inset-inline-start: 22%; }
+      .pin-b { inset-block-start: 31%; inset-inline-end: 14%; color: var(--sun); }
+      .pin-c { inset-block-end: 17%; inset-inline-start: 42%; color: var(--water); }
+
+      .atlas-label {
+        position: absolute;
+        inset: auto 1.2rem 1.2rem 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        color: var(--muted);
+        font-size: var(--step--1);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .route-card,
+      .timeline-card,
+      .signal-panel {
+        border-radius: var(--radius-soft);
+        padding: clamp(1rem, 2.6vi, 1.55rem);
+      }
+
+      .route-card {
+        display: grid;
+        gap: 1.1rem;
+        min-block-size: 100%;
+      }
+
+      .route-card p,
+      .timeline-card p,
+      .signal-panel p {
+        color: var(--muted);
+      }
+
+      .route-index {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        color: var(--muted);
+        font-size: var(--step--1);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .route-line {
+        block-size: 0.35rem;
+        border-radius: 999rem;
+        background: linear-gradient(90deg, var(--signal), var(--sun), var(--water));
+      }
+
+      .timeline {
+        display: grid;
+        gap: 1rem;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+
+      .timeline li {
+        display: grid;
+        grid-template-columns: minmax(7rem, 0.28fr) minmax(0, 1fr);
+        gap: 1rem;
+        align-items: start;
+      }
+
+      .time-code {
+        color: var(--signal);
+        font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+        font-size: var(--step--1);
+      }
+
+      .signal-panel {
+        grid-column: span 7;
+        display: grid;
+        gap: 1rem;
+      }
+
+      .coordinate-panel {
+        grid-column: span 5;
+      }
+
+      .coordinate-list {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .coordinate-list div {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block-end: 0.75rem;
+        border-block-end: 0.08rem solid color-mix(in oklab, var(--line) 28%, transparent);
+      }
+
+      .coordinate-list dt {
+        color: var(--muted);
+      }
+
+      .coordinate-list dd {
+        font-weight: 850;
+        text-align: end;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-block-size: 2.9rem;
+        padding-inline: 1rem;
+        border: 0.08rem solid var(--line);
+        border-radius: 999rem;
+        background: var(--signal);
+        color: #071317;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .button.secondary {
+        background: transparent;
+        color: var(--ink);
+      }
+
+      .site-footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: 2rem;
+        border-block-start: 0.08rem solid color-mix(in oklab, var(--line) 32%, transparent);
+        color: var(--muted);
+        font-size: var(--step--1);
+      }
+
+      @media (max-width: 860px) {
+        .timeline li { grid-template-columns: 1fr; }
+        .signal-panel,
+        .coordinate-panel { grid-column: auto; }
+        .hero-card { min-block-size: 32rem; }
+      }
+    }
+
+    @layer motion {
+      @media (prefers-reduced-motion: no-preference) {
+        .atlas { animation: drift 28s linear infinite; }
+        .pin { animation: pulse 4s ease-in-out infinite; }
+        .pin-b { animation-delay: 0.8s; }
+        .pin-c { animation-delay: 1.6s; }
+
+        @keyframes drift {
+          to { rotate: 360deg; }
+        }
+
+        @keyframes pulse {
+          50% { scale: 1.06; }
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header page" aria-label="Site header">
+    <a class="brand" href="index.htm" aria-label="Back to Friday Page index">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>Friday Page 003</span>
+    </a>
+    <nav aria-label="Page sections">
+      <ul class="nav-list">
+        <li><a href="#routes">Routes</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#coordinates">Coordinates</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="page">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="stack">
+        <p class="eyebrow">Temporal Atlas · Cartographic personal site</p>
+        <h1 id="page-title">Map the work across time.</h1>
+        <p class="lead">A speculative landing page for a digital systems thinker who turns shifting ideas, projects, and decisions into visible routes.</p>
+        <ul class="meta-row" aria-label="Design notes">
+          <li>Semantic HTML</li>
+          <li>Responsive Grid</li>
+          <li>Reduced-motion safe</li>
+          <li>Visible focus states</li>
+        </ul>
+        <div class="cta-row">
+          <a class="button" href="#routes">Explore the paths</a>
+          <a class="button secondary" href="#coordinates">Read the coordinates</a>
+        </div>
+      </div>
+
+      <figure class="hero-card" aria-label="Abstract temporal atlas with routes and coordinates">
+        <div class="atlas" aria-hidden="true">
+          <span class="axis"></span>
+          <span class="axis"></span>
+          <span class="axis"></span>
+          <span class="axis"></span>
+          <span class="pin pin-a">01</span>
+          <span class="pin pin-b">02</span>
+          <span class="pin pin-c">03</span>
+        </div>
+        <figcaption class="atlas-label">
+          <span>48.14 N</span>
+          <span>011.58 E</span>
+          <span>UTC+02</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="routes" class="section-grid" aria-labelledby="routes-title">
+      <div class="stack">
+        <p class="eyebrow">Knowledge paths</p>
+        <h2 id="routes-title">Three routes through a changing landscape.</h2>
+        <p class="lead">The layout treats projects like terrain: each card marks a direction, a constraint, and the kind of judgement needed to move forward.</p>
+      </div>
+
+      <div class="card-grid">
+        <article class="route-card">
+          <p class="route-index"><span>Route 01</span><span>Observe</span></p>
+          <div class="route-line" aria-hidden="true"></div>
+          <h3>Signals from the field</h3>
+          <p>Collect weak signals, notes, questions, and examples before turning them into a clear brief.</p>
+        </article>
+        <article class="route-card">
+          <p class="route-index"><span>Route 02</span><span>Orient</span></p>
+          <div class="route-line" aria-hidden="true"></div>
+          <h3>Decisions with context</h3>
+          <p>Make trade-offs visible so teams can see why one path is safer, faster, or more resilient.</p>
+        </article>
+        <article class="route-card">
+          <p class="route-index"><span>Route 03</span><span>Share</span></p>
+          <div class="route-line" aria-hidden="true"></div>
+          <h3>Maps others can use</h3>
+          <p>Turn complex work into accessible pages, tools, and documentation that survive handovers.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="timeline" class="section-grid" aria-labelledby="timeline-title">
+      <div class="stack">
+        <p class="eyebrow">Time axis</p>
+        <h2 id="timeline-title">A timeline for work that never stands still.</h2>
+        <p class="lead">The page uses temporal language without requiring JavaScript. Motion only adds atmosphere when the visitor has not requested reduced motion.</p>
+      </div>
+
+      <article class="timeline-card">
+        <ol class="timeline">
+          <li>
+            <span class="time-code">T-03 · Scan</span>
+            <div>
+              <h3>Read the terrain</h3>
+              <p>Identify the visible facts, hidden constraints, and missing sources before choosing a direction.</p>
+            </div>
+          </li>
+          <li>
+            <span class="time-code">T-02 · Shape</span>
+            <div>
+              <h3>Draw the route</h3>
+              <p>Convert uncertainty into a small number of explainable options, each with a clear cost.</p>
+            </div>
+          </li>
+          <li>
+            <span class="time-code">T-01 · Build</span>
+            <div>
+              <h3>Publish the map</h3>
+              <p>Ship a focused artifact that is useful immediately and still readable months later.</p>
+            </div>
+          </li>
+        </ol>
+      </article>
+    </section>
+
+    <section id="coordinates" class="wide-grid" aria-labelledby="coordinates-title">
+      <article class="signal-panel">
+        <p class="eyebrow">Coordinates</p>
+        <h2 id="coordinates-title">A compact identity system for a personal landing page.</h2>
+        <p>The concept combines a dark navigation surface, concentric atlas rings, coordinate labels, and calm map-like motion. The result feels technical, editorial, and human rather than like a generic portfolio template.</p>
+        <div class="cta-row">
+          <a class="button" href="mailto:hello@example.com">Start a route</a>
+          <a class="button secondary" href="index.htm">Back to index</a>
+        </div>
+      </article>
+
+      <aside class="signal-panel coordinate-panel" aria-label="Project coordinates">
+        <dl class="coordinate-list">
+          <div>
+            <dt>Mode</dt>
+            <dd>Atlas UI</dd>
+          </div>
+          <div>
+            <dt>Palette</dt>
+            <dd>Night map</dd>
+          </div>
+          <div>
+            <dt>Layout</dt>
+            <dd>Fluid Grid</dd>
+          </div>
+          <div>
+            <dt>Access</dt>
+            <dd>Keyboard first</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <p>Friday Page 003 · Temporal Atlas</p>
+    <p>Generated May 29, 2026 · Standalone HTML experiment</p>
+  </footer>
+</body>
+</html>
